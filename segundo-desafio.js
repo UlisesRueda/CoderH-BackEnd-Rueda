@@ -25,7 +25,7 @@ class ProductManager{
         if(idCoindence === -1){
             return 'Product not found'
         }else{
-            console.log('The chosen product is: ');
+            console.log('El producto elegido es: ');
             return (this.products[idCoindence])
         }
         
@@ -51,9 +51,9 @@ class ProductManager{
             this.products.push(newProduct);
             let newProductStr = JSON.stringify(this.products, null, 2)
             fs.writeFileSync(this.path, newProductStr)
-            return 'Product Added'
+            return 'Producto agregado'
         }else{
-            return 'Error. The product code already exists'
+            return 'Error. Este producto ya existe'
         }
     }
 
@@ -72,9 +72,9 @@ class ProductManager{
 
                 fs.writeFile(this.path, updateProductStr);
                 console.log(this.products[idCoindence]);
-                return `The product with the ID ${id} was successfully modifed`
+                return `El producto con ID ${id} fue modificado exitosamente`
             } catch (error) {
-                return `Error updating the product. Error: ${error}`
+                return `Error al actualizar el producto. Error: ${error}`
             }
         }
     }
@@ -93,9 +93,9 @@ class ProductManager{
 
                 const updatedData = data.filter(prod => prod.id !== id);
                 await fs.watchFile(this.path, JSON.stringify(updatedData, null, 2))
-                return `Product with the ID ${id} successfuly deleted`
+                return `Producto con ID ${is} eliminado correctamente`
             } catch (error) {
-                return `Error deleting the product. Error ${error}`
+                return `Error al eliminar el producto. Error ${error}`
             }
         }
     }
