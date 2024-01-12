@@ -1,3 +1,4 @@
+const { log } = require('console');
 const fs = require('fs');
 
 class ProductManager{
@@ -64,17 +65,14 @@ class ProductManager{
             return 'Not found';
         }else{
             try {
-                let selectedProduct = this.products[idCoindence]
-
-                Object.assign(selectedProduct, updatedFields)
-
-                const updateProductStr = JSON.stringify(this.products, null, 2)
-
-                fs.writeFile(this.path, updateProductStr);
+                let selectedProduct = this.products[idCoindence];
+                Object.assign(selectedProduct,updatedFields);
+                const updateProductStr = JSON.stringify(this.products,null,2);
+                await fs.promises.writeFile(this.path,updateProductStr);
                 console.log(this.products[idCoindence]);
-                return `The product with the ID ${id} was successfully modifed`
+                return `El producto con ID ${id} fue modificado exitosamente`
             } catch (error) {
-                return `Error updating the product. Error: ${error}`
+                return `Error al actualizar el producto. Error: ${error}`
             }
         }
     }
@@ -86,40 +84,49 @@ class ProductManager{
             return 'Not found'
         }else{
             this.products.splice(idCoindence, 1);
-
             try {
-                const fileContent = await fs.promises.readFile(this.path, 'utf-8');
-                const data = JSON.parse(fileContent)
-
-                const updatedData = data.filter(prod => prod.id !== id);
-                await fs.watchFile(this.path, JSON.stringify(updatedData, null, 2))
-                return `Product with the ID ${id} successfuly deleted`
+                await fs.promises.writeFile(this.path,JSON.stringify(this.products,null,2));
+                return `Producto con ID ${id} eliminado correctamente`
             } catch (error) {
-                return `Error deleting the product. Error ${error}`
+                return `Error al eliminar el producto. Error ${error}`
             }
         }
     }
 }
 
-const productManager = new ProductManager();
-
-console.log(productManager.addProduct("producto prueba", "Este es un producto de prueba", 200, "Sin imagen", "abc123", 25));
-console.log(productManager.addProduct("producto prueba", "Este es un producto de prueba", 200, "Sin imagen", "abc123", 25));
-console.log(productManager.addProduct("segundo producto prueba", "Este es el segundo producto de prueba", 400, "Sin imagen", "def456", 50));
-console.log(productManager.addProduct("segundo producto prueba", "Este es el segundo producto de prueba", 400, "Sin imagen", "def456", 50));
-console.log("----------------------------------- \n Test getProducts\n-----------------------------------");
-console.log(productManager.getProducts());
-console.log("----------------------------------- \n Test getProductById\n-----------------------------------");
-console.log(productManager.getProductsByID(1));
-console.log(productManager.getProductsByID(3));
-console.log("----------------------------------- \n Test updateProduct\n-----------------------------------");
-console.log(productManager.updateProduct(1, {title: "Este producto ha si modificado", stock: 0 }));
-console.log(productManager.updateProduct(3, {title:"Este id no existe"}));
-console.log("----------------------------------- \n Test deleteProduct\n-----------------------------------");
-productManager.deleteProduct(1)
-    .then(result => console.log(result))
-    .catch(error => console.error(error));
-
-productManager.deleteProduct(3)
-    .then(result => console.log(result))
-    .catch(error => console.error(error))
+async function runTests() {
+    const productManager = new ProductManager();
+    console.log(productManager.addProduct("producto prueba", "Este es un producto de prueba", 200, "Sin imagen", "abc123", 25));
+    // console.log(productManager.addProduct("producto prueba", "Este es un producto de prueba", 200, "Sin imagen", "abc123", 25));
+    console.log(productManager.addProduct("segundo producto prueba", "Este es el segundo producto de prueba", 400, "Sin imagen", "def456", 50));
+    // console.log(productManager.addProduct("segundo producto prueba", "Este es el segundo producto de prueba", 400, "Sin imagen", "def456", 50));
+    console.log(productManager.getProducts());
+    console.log(productManager.getProductsByID(1));
+    console.log(productManager.getProductsByID(3));
+    try {
+        const updateResult1 = await productManager.updateProduct(1, { title: "Este producto ha sido modificado", stock: 0 });
+        console.log(updateResult1);
+    } catch (error) {
+        console.error(error);
+    }
+    try {
+        const updateResult3 = await productManager.updateProduct(3, { title: "Este id no existe" });
+        console.log(updateResult3);
+    } catch (error) {
+        console.error(error);
+    }
+  
+    try {
+        const deleteResult1 = await productManager.deleteProduct(1);
+        console.log(deleteResult1);
+    } catch (error) {
+        console.error(error);
+    }
+    try {
+        const deleteResult3 = await productManager.deleteProduct(3);
+        console.log(deleteResult3);
+    } catch (error) {
+        console.error(error);
+    }
+}
+runTests();
