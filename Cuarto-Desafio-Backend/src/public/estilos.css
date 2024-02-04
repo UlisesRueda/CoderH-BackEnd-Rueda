@@ -1,0 +1,23 @@
+*{
+    background-color: #c8deed;
+}
+
+#table{
+    margin-left: 18%;
+    background-color: #7e94b7;
+    
+}
+
+#addNewProduct{
+    margin-left: 20%;
+}
+
+#deleteProduct{
+    margin-left: 20%;
+
+}
+
+.Titulo{
+    margin-left: 17%;
+    color:#000048;
+}
