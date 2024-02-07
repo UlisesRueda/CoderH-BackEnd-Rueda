@@ -17,14 +17,14 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
-app.use("/", realTimeRouter)
-
 //CONEXCION CON WEBSOCKET
 const httpServer = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
 
 const io = new Server(httpServer);
+
+app.use("/", realTimeRouter(io)); 
 
 app.get('/', async (req, res) => {
     try {
